@@ -1,0 +1,34 @@
+<div id="loadingDiv" style="font-family: Arial; padding: 10px; display: block;">
+  <h3>Loading...</h3>
+</div>
+<div id="formDiv" style="font-family: Arial; padding: 10px; display: none;">
+  <label>Client ID</label><br>
+  <input type="text" id="clientId" style="width: 100%;"><br><br>
+
+  <label>Client Secret</label><br>
+  <input type="password" id="clientSecret" style="width: 100%;"><br><br>
+
+  <label>Redirect URI</label><br>
+  <input type="text" id="uri" style="width: 100%; color: gray;" readonly><br><br>
+  <button onclick="save()">Save</button>
+</div>
+
+<script>
+google.script.run.withSuccessHandler(data => {
+  document.getElementById('clientId').value = data.clientId;
+  document.getElementById('clientSecret').value = data.clientSecret;
+  document.getElementById('uri').value = data.redirectUri;
+  document.getElementById('loadingDiv').style.display = 'none';
+  document.getElementById('formDiv').style.display = 'block';
+  
+}).getSettings();
+
+function save() {
+  const clientId = document.getElementById('clientId').value.trim();
+  const clientSecret = document.getElementById('clientSecret').value.trim();
+  google.script.run.withSuccessHandler(() => {
+    alert('Settings saved!');
+    google.script.host.close();
+  }).saveSettings(clientId, clientSecret);
+}
+</script>
